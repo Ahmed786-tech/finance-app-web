@@ -1,25 +1,21 @@
-// composables/useApi.ts
 export function useApi() {
-  const config = useRuntimeConfig()
-
-  // Read token from cookie
-  const token = useCookie<string | null>('auth_token', {
-    sameSite: 'lax',
-    path: '/', // ensure it's available globally
-  })
+  const config = useRuntimeConfig();
+  const token = useCookie<string | null>("auth_token", {
+    sameSite: "lax",
+    path: "/",
+  });
 
   const $fetcher = $fetch.create({
     baseURL: config.public.apiBase,
     onRequest({ options }) {
-      const t = token.value
-      if (t) {
+      if (token.value) {
         options.headers = {
           ...(options.headers || {}),
-          Authorization: `Bearer ${t}`,
-        }
+          Authorization: `Bearer ${token.value}`,
+        };
       }
     },
-  })
+  });
 
-  return { $fetcher, token }
+  return { $fetcher, token };
 }

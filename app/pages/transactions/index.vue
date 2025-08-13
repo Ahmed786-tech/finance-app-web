@@ -1,141 +1,346 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { useAuthStore } from '~/stores/auth'
-import { useApi } from '~/composables/useApi'
-import { navigateTo } from '#app'
+import { onMounted, ref } from "vue";
+import { useAuthStore } from "~/stores/auth";
+import { useApi } from "~/composables/useApi";
+import { navigateTo } from "#app";
 
 definePageMeta({
-  middleware: ['auth']
-})
+  middleware: ["auth"],
+});
 
-const auth = useAuthStore()
-const { $fetcher } = useApi()
+const auth = useAuthStore();
+const { $fetcher } = useApi();
 
-const items = ref<any[]>([])
-const loading = ref(true)
-const error = ref<string | null>(null)
+const items = ref<any[]>([]);
+const loading = ref(true);
+const error = ref<string | null>(null);
 
 onMounted(async () => {
-  await fetchTransactions()
-})
+  await fetchTransactions();
+});
 
 async function fetchTransactions() {
-  loading.value = true
-  error.value = null
+  loading.value = true;
+  error.value = null;
   try {
-    const res = await $fetcher('/transactions')
-    items.value = res
+    const res = (await $fetcher("/transactions")) as any[];
+    items.value = res;
   } catch (err: any) {
-    error.value = err?.data?.message || 'Failed to load transactions.'
+    error.value = err?.data?.message || "Failed to load transactions.";
   } finally {
-    loading.value = false
+    loading.value = false;
   }
 }
 
-// 🔧 Handles Decimal128 and formats amount with sign
 function formatAmount(tx: any, myId: string | undefined): string {
-  const raw = tx?.amount?.$numberDecimal || tx?.amount || '0'
-  const amount = parseFloat(raw)
-  const senderId = tx?.sender?._id || tx?.sender
-  const isSender = senderId === myId
-  const sign = isSender ? '-' : '+'
-  return `${sign}${amount.toFixed(2)}`
+  const raw = tx?.amount?.$numberDecimal || tx?.amount || "0";
+  const amount = parseFloat(raw);
+  const senderId = tx?.sender?._id || tx?.sender;
+  const isSender = senderId === myId;
+  const sign = isSender ? "-" : "+";
+  return `${sign}${amount.toFixed(2)}`;
 }
 
-// Returns red or green based on sender
 function amountClass(tx: any) {
-  const myId = auth.user?.id
-  const isSender = tx.sender?._id === myId || tx.sender === myId
-  return isSender ? 'text-red-600' : 'text-green-600'
+  const myId = auth.user?.id;
+  const isSender = tx.sender?._id === myId || tx.sender === myId;
+  return isSender ? "text-red-600" : "text-green-600";
 }
 
 async function deleteTransaction(id: string) {
-  if (confirm('Are you sure you want to delete this transaction?')) {
+  if (confirm("Are you sure you want to delete this transaction?")) {
     try {
-      await $fetcher(`/transactions/${id}`, { method: 'DELETE' })
-      items.value = items.value.filter((tx) => tx._id !== id)
+      await $fetcher(`/transactions/${id}`, { method: "DELETE" });
+      items.value = items.value.filter((tx) => tx._id !== id);
     } catch (err: any) {
-      error.value = err?.data?.message || 'Failed to delete transaction.'
+      error.value = err?.data?.message || "Failed to delete transaction.";
     }
   }
 }
 </script>
 
 <template>
-  <div class="max-w-4xl p-6 mx-auto space-y-6">
+  <div class="min-h-screen bg-gray-50">
     <!-- Header -->
-    <div class="flex items-center justify-between">
-      <h1 class="text-2xl font-semibold">Dashboard</h1>
-      <div class="space-x-2">
-        <NuxtLink
-          v-if="auth.isManager"
-          to="/transactions/create"
-          class="px-4 py-1 text-white bg-blue-600 border rounded hover:bg-blue-700"
-        >
-          New Transaction
-        </NuxtLink>
-        <NuxtLink
-          v-if="auth.isManager"
-          to="/users"
-          class="px-4 py-1 bg-gray-200 border rounded hover:bg-gray-300"
-        >
-          Manage Users
-        </NuxtLink>
-        <button
-          @click="auth.logout(); navigateTo('/login')"
-          class="px-4 py-1 text-white bg-red-500 border rounded hover:bg-red-600"
-        >
-          Logout
-        </button>
-      </div>
-    </div>
-
-    <!-- Loading/Error -->
-    <div v-if="loading" class="text-gray-600">Loading transactions...</div>
-    <div v-else-if="error" class="p-4 text-red-600 border border-red-300 rounded">
-      {{ error }}
-    </div>
-    <div v-else-if="items.length === 0" class="text-gray-600">
-      No transactions found.
-    </div>
-
-    <!-- Transaction List -->
-    <div v-else class="border divide-y rounded shadow">
-      <div
-        v-for="tx in items"
-        :key="tx._id"
-        class="flex items-center justify-between p-4 transition hover:bg-gray-50"
-      >
-        <!-- Left side: reason, parties -->
-        <NuxtLink :to="`/transactions/${tx._id}`" class="flex-1">
-          <div class="font-medium">{{ tx.reason }}</div>
-          <div class="text-sm text-gray-500">
-            {{ tx.sender?.email || tx.sender }} → {{ tx.receiver?.email || tx.receiver }} • {{ tx.status }}
-          </div>
-        </NuxtLink>
-
-        <!-- Right side: amount + actions -->
-        <div class="ml-4 space-y-1 text-right">
-          <div :class="['font-semibold', amountClass(tx)]">
-            {{ formatAmount(tx, auth.user?.id) }}
-          </div>
-
-          <div v-if="auth.isManager" class="flex justify-end space-x-2 text-sm">
+    <header class="bg-white shadow-sm border-b">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center py-4">
+          <div class="flex items-center">
             <NuxtLink
-              :to="`/transactions/${tx._id}`"
-              class="text-blue-600 hover:underline"
+              to="/"
+              class="flex items-center text-gray-600 hover:text-gray-900"
             >
-              View
+              <svg
+                class="w-5 h-5 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 19l-7-7 7-7"
+                ></path>
+              </svg>
+              Back to Dashboard
             </NuxtLink>
-            <button
-              @click="deleteTransaction(tx._id)"
-              class="text-red-600 hover:underline"
+          </div>
+
+          <div class="flex items-center space-x-4">
+            <NuxtLink
+              v-if="auth.isManager"
+              to="/transactions/create"
+              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
-              Delete
-            </button>
+              <svg
+                class="w-4 h-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                ></path>
+              </svg>
+              New Transaction
+            </NuxtLink>
+            <NuxtLink
+              v-if="auth.isManager"
+              to="/users"
+              class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+              <svg
+                class="w-4 h-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"
+                ></path>
+              </svg>
+              Manage Users
+            </NuxtLink>
           </div>
         </div>
       </div>
-    </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      <div class="px-4 py-6 sm:px-0">
+        <!-- Page Header -->
+        <div class="mb-8">
+          <h1 class="text-3xl font-bold text-gray-900">Transactions</h1>
+          <p class="mt-2 text-sm text-gray-600">
+            {{
+              auth.isManager
+                ? "All transactions in the system"
+                : "Your transaction history"
+            }}
+          </p>
+        </div>
+
+        <!-- Loading State -->
+        <div v-if="loading" class="flex items-center justify-center py-12">
+          <div class="flex items-center">
+            <svg
+              class="animate-spin -ml-1 mr-3 h-8 w-8 text-blue-600"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+            <span class="text-lg text-gray-600">Loading transactions...</span>
+          </div>
+        </div>
+
+        <!-- Error State -->
+        <div
+          v-else-if="error"
+          class="bg-red-50 border border-red-200 rounded-lg p-6"
+        >
+          <div class="flex">
+            <svg
+              class="w-6 h-6 text-red-400 mr-3"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+            <div>
+              <h3 class="text-lg font-medium text-red-800">
+                Error loading transactions
+              </h3>
+              <p class="mt-1 text-red-700">{{ error }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div v-else-if="items.length === 0" class="text-center py-12">
+          <svg
+            class="mx-auto h-12 w-12 text-gray-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+            ></path>
+          </svg>
+          <h3 class="mt-4 text-lg font-medium text-gray-900">
+            No transactions found
+          </h3>
+          <p class="mt-2 text-gray-500">
+            {{
+              auth.isManager
+                ? "Get started by creating a new transaction."
+                : "You haven't made any transactions yet."
+            }}
+          </p>
+          <div v-if="auth.isManager" class="mt-6">
+            <NuxtLink
+              to="/transactions/create"
+              class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+            >
+              <svg
+                class="w-4 h-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                ></path>
+              </svg>
+              Create Transaction
+            </NuxtLink>
+          </div>
+        </div>
+
+        <!-- Transaction List -->
+        <div v-else class="bg-white shadow overflow-hidden sm:rounded-md">
+          <ul class="divide-y divide-gray-200">
+            <li
+              v-for="tx in items"
+              :key="tx._id"
+              class="hover:bg-gray-50 transition-colors"
+            >
+              <NuxtLink :to="`/transactions/${tx._id}`" class="block">
+                <div class="px-4 py-4 sm:px-6">
+                  <div class="flex items-center justify-between">
+                    <div class="flex-1 min-w-0">
+                      <div class="flex items-center justify-between">
+                        <p class="text-lg font-medium text-gray-900 truncate">
+                          {{ tx.reason }}
+                        </p>
+                        <div class="ml-2 flex-shrink-0 flex">
+                          <p
+                            :class="[
+                              'inline-flex px-2 py-1 text-xs font-semibold rounded-full',
+                              amountClass(tx),
+                            ]"
+                          >
+                            {{ formatAmount(tx, auth.user?.id) }}
+                          </p>
+                        </div>
+                      </div>
+                      <div class="mt-2 flex">
+                        <div class="flex items-center text-sm text-gray-500">
+                          <svg
+                            class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                            ></path>
+                          </svg>
+                          {{ tx.sender?.email || tx.sender }} →
+                          {{ tx.receiver?.email || tx.receiver }}
+                        </div>
+                        <div
+                          class="ml-6 flex items-center text-sm text-gray-500"
+                        >
+                          <svg
+                            class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                            ></path>
+                          </svg>
+                          <span class="capitalize">{{ tx.status }}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Manager Actions -->
+                    <div
+                      v-if="auth.isManager"
+                      class="ml-4 flex items-center space-x-2"
+                    >
+                      <NuxtLink
+                        :to="`/transactions/${tx._id}/edit`"
+                        class="text-blue-600 hover:text-blue-900 text-sm font-medium"
+                        @click.stop
+                      >
+                        Edit
+                      </NuxtLink>
+                      <button
+                        @click.stop="deleteTransaction(tx._id)"
+                        class="text-red-600 hover:text-red-900 text-sm font-medium"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </NuxtLink>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </main>
   </div>
 </template>

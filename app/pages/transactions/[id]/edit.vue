@@ -1,62 +1,53 @@
 <script setup lang="ts">
-import { useRoute, useRouter } from 'vue-router'
-import { onMounted, ref } from 'vue'
-import { useApi } from '~/composables/useApi'
+import { useRoute, useRouter } from "vue-router";
+import { onMounted, ref } from "vue";
+import { useApi } from "~/composables/useApi";
 
 definePageMeta({
-  middleware: ['auth', 'manager']
-})
+  middleware: ["auth", "manager"],
+});
 
-const route = useRoute()
-const router = useRouter()
-const { $fetcher } = useApi()
+const route = useRoute();
+const router = useRouter();
+const { $fetcher } = useApi();
 
-const tx = ref<any>(null)
-const users = ref<any[]>([])
-const error = ref('')
-const saving = ref(false)
+const tx = ref<any>(null);
+const users = ref<any[]>([]);
+const error = ref("");
+const saving = ref(false);
 
 onMounted(async () => {
   try {
-    // Load transaction
-    const res = await $fetcher(`/transactions/${route.params.id}`)
-
-    // Normalize sender/receiver to ID strings
-    res.sender = res.sender?._id || res.sender
-    res.receiver = res.receiver?._id || res.receiver
-
-    // Normalize amount (Decimal128 support)
-    res.amount = parseFloat(res.amount?.$numberDecimal || res.amount)
-
-    // Set transaction
-    tx.value = res
-
-    // Load users for dropdowns
-    users.value = await $fetcher('/users')
+    const res = await $fetcher(`/transactions/${route.params.id}`);
+    res.sender = res.sender?._id || res.sender;
+    res.receiver = res.receiver?._id || res.receiver;
+    res.amount = parseFloat(res.amount?.$numberDecimal || res.amount);
+    tx.value = res;
+    users.value = await $fetcher("/users");
   } catch (err: any) {
-    error.value = err?.data?.message || 'Failed to load transaction'
+    error.value = err?.data?.message || "Failed to load transaction";
   }
-})
+});
 
 async function save() {
-  saving.value = true
-  error.value = ''
+  saving.value = true;
+  error.value = "";
   try {
     await $fetcher(`/transactions/${route.params.id}`, {
-      method: 'PATCH',
+      method: "PATCH",
       body: {
         sender: tx.value.sender,
         receiver: tx.value.receiver,
         reason: tx.value.reason,
         amount: parseFloat(tx.value.amount),
-        status: tx.value.status
-      }
-    })
-    router.push('/transactions')
+        status: tx.value.status,
+      },
+    });
+    router.push("/transactions");
   } catch (err: any) {
-    error.value = err?.data?.message || 'Update failed'
+    error.value = err?.data?.message || "Update failed";
   } finally {
-    saving.value = false
+    saving.value = false;
   }
 }
 </script>
@@ -117,7 +108,7 @@ async function save() {
         :disabled="saving"
         class="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700 disabled:opacity-50"
       >
-        {{ saving ? 'Saving...' : 'Save Changes' }}
+        {{ saving ? "Saving..." : "Save Changes" }}
       </button>
     </div>
   </div>

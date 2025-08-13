@@ -1,50 +1,50 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router'
-import { ref, onMounted } from 'vue'
-import { useApi } from '../../composables/useApi'
-import { useAuthStore } from '../../stores/auth';
-import { navigateTo } from '#app'
+import { useRoute } from "vue-router";
+import { ref, onMounted } from "vue";
+import { useApi } from "../../composables/useApi";
+import { useAuthStore } from "../../stores/auth";
+import { navigateTo } from "#app";
 
-// definePageMeta({
-//   middleware: ['auth', 'manager']
-// })
+definePageMeta({
+  middleware: ["auth", "manager"],
+});
 
-const route = useRoute()
-const { $fetcher } = useApi()
-const { user: currentUser } = useAuthStore()
+const route = useRoute();
+const { $fetcher } = useApi();
+const { user: currentUser } = useAuthStore();
 
-const user = ref<any>(null)
-const roles = ref<string[]>([])
-const loading = ref(true)
-const error = ref('')
-const saving = ref(false)
-const success = ref(false)
+const user = ref<any>(null);
+const roles = ref<string[]>([]);
+const loading = ref(true);
+const error = ref("");
+const saving = ref(false);
+const success = ref(false);
 
 onMounted(async () => {
   try {
-    const res = await $fetcher(`/users/${route.params.id}`)
-    user.value = res
-    roles.value = [...res.roles]
+    const res = await $fetcher(`/users/${route.params.id}`);
+    user.value = res;
+    roles.value = [...res.roles];
   } catch (err: any) {
-    error.value = err?.data?.message || 'Failed to load user'
+    error.value = err?.data?.message || "Failed to load user";
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-})
+});
 
 async function updateRoles() {
   try {
-    saving.value = true
+    saving.value = true;
     await $fetcher(`/users/${route.params.id}`, {
-      method: 'PATCH',
-      body: { roles: roles.value }
-    })
-    success.value = true
-    setTimeout(() => (success.value = false), 2000)
+      method: "PATCH",
+      body: { roles: roles.value },
+    });
+    success.value = true;
+    setTimeout(() => (success.value = false), 2000);
   } catch (err: any) {
-    error.value = err?.data?.message || 'Failed to update'
+    error.value = err?.data?.message || "Failed to update";
   } finally {
-    saving.value = false
+    saving.value = false;
   }
 }
 </script>
@@ -53,7 +53,9 @@ async function updateRoles() {
   <div class="max-w-xl p-6 mx-auto">
     <div class="flex items-center justify-between mb-4">
       <h1 class="text-2xl font-bold">User Details</h1>
-      <NuxtLink to="/users" class="text-sm text-blue-600 hover:underline">← Back to Users</NuxtLink>
+      <NuxtLink to="/users" class="text-sm text-blue-600 hover:underline"
+        >← Back to Users</NuxtLink
+      >
     </div>
 
     <div v-if="loading">Loading user...</div>
@@ -82,7 +84,9 @@ async function updateRoles() {
         <span v-else>Saving…</span>
       </button>
 
-      <p v-if="success" class="mt-3 text-green-600">User updated successfully.</p>
+      <p v-if="success" class="mt-3 text-green-600">
+        User updated successfully.
+      </p>
     </div>
   </div>
 </template>
