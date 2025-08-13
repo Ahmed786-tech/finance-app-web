@@ -40,7 +40,7 @@ function logout() {
                   </svg>
                 </div>
                 <h1 class="ml-3 text-xl font-semibold text-gray-900">
-                  Money App
+                  Finance App
                 </h1>
               </div>
             </div>

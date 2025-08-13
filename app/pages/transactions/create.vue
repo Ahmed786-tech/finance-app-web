@@ -25,8 +25,8 @@ onMounted(async () => {
   try {
     users.value = await $fetcher("/users");
     // Auto-select the logged-in user as sender
-    if (user?.id) {
-      sender.value = user.id;
+    if (user?._id) {
+      sender.value = user._id;
     }
   } catch (err: any) {
     error.value = err?.data?.message || "Failed to load users";

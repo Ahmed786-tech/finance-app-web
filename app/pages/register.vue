@@ -5,8 +5,8 @@ import { useApi } from "../composables/useApi";
 import { navigateTo } from "#app";
 
 const email = ref("");
+const name = ref("");
 const password = ref("");
-const confirmPassword = ref("");
 const errorMsg = ref<string | null>(null);
 const isSubmitting = ref(false);
 const auth = useAuthStore();
@@ -14,12 +14,8 @@ const { $fetcher, token } = useApi();
 
 async function submit() {
   errorMsg.value = null;
-  if (!email.value || !password.value) {
+  if (!name.value || !email.value || !password.value) {
     errorMsg.value = "Please fill in all fields.";
-    return;
-  }
-  if (password.value !== confirmPassword.value) {
-    errorMsg.value = "Passwords do not match.";
     return;
   }
   if (password.value.length < 6) {
@@ -31,12 +27,12 @@ async function submit() {
   try {
     const res = (await $fetcher("/auth/register", {
       method: "POST",
-      body: { email: email.value, password: password.value },
+      body: { name: name.value, email: email.value, password: password.value },
     })) as any;
-    auth.token = res.token;
-    auth.user = res.user;
+    auth.token = res.data.token;
+    auth.user = res.data;
     auth.persist();
-    token.value = res.token;
+    token.value = res.data.token;
     return navigateTo("/");
   } catch (err: any) {
     errorMsg.value =
@@ -104,6 +100,21 @@ async function submit() {
         <div class="space-y-4">
           <div>
             <label
+              for="name"
+              class="block text-sm font-medium text-gray-700 mb-2"
+              >Name</label
+            >
+            <input
+              id="name"
+              v-model="name"
+              type="text"
+              placeholder="Enter your Name"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
+              required
+            />
+          </div>
+          <div>
+            <label
               for="email"
               class="block text-sm font-medium text-gray-700 mb-2"
               >Email Address</label
@@ -130,23 +141,6 @@ async function submit() {
               v-model="password"
               type="password"
               placeholder="Create a password"
-              autocomplete="new-password"
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
-              required
-            />
-          </div>
-
-          <div>
-            <label
-              for="confirmPassword"
-              class="block text-sm font-medium text-gray-700 mb-2"
-              >Confirm Password</label
-            >
-            <input
-              id="confirmPassword"
-              v-model="confirmPassword"
-              type="password"
-              placeholder="Confirm your password"
               autocomplete="new-password"
               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
               required

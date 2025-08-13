@@ -25,10 +25,10 @@ async function submit() {
       method: "POST",
       body: { email: email.value, password: password.value },
     })) as any;
-    auth.token = res.token;
-    auth.user = res.user;
+    auth.token = res.data.token;
+    auth.user = res.data;
     auth.persist();
-    token.value = res.token;
+    token.value = res.data.token;
     await navigateTo("/");
   } catch (err: any) {
     const serverMsg =

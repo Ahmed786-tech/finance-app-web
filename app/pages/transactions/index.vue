@@ -42,7 +42,7 @@ function formatAmount(tx: any, myId: string | undefined): string {
 }
 
 function amountClass(tx: any) {
-  const myId = auth.user?.id;
+  const myId = auth.user?._id;
   const isSender = tx.sender?._id === myId || tx.sender === myId;
   return isSender ? "text-red-600" : "text-green-600";
 }
@@ -272,7 +272,7 @@ async function deleteTransaction(id: string) {
                               amountClass(tx),
                             ]"
                           >
-                            {{ formatAmount(tx, auth.user?.id) }}
+                            {{ formatAmount(tx, auth.user?._id) }}
                           </p>
                         </div>
                       </div>

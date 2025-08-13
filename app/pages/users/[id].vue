@@ -14,39 +14,19 @@ const { $fetcher } = useApi();
 const { user: currentUser } = useAuthStore();
 
 const user = ref<any>(null);
-const roles = ref<string[]>([]);
 const loading = ref(true);
 const error = ref("");
-const saving = ref(false);
-const success = ref(false);
 
 onMounted(async () => {
   try {
     const res = await $fetcher(`/users/${route.params.id}`);
     user.value = res;
-    roles.value = [...res.roles];
   } catch (err: any) {
     error.value = err?.data?.message || "Failed to load user";
   } finally {
     loading.value = false;
   }
 });
-
-async function updateRoles() {
-  try {
-    saving.value = true;
-    await $fetcher(`/users/${route.params.id}`, {
-      method: "PATCH",
-      body: { roles: roles.value },
-    });
-    success.value = true;
-    setTimeout(() => (success.value = false), 2000);
-  } catch (err: any) {
-    error.value = err?.data?.message || "Failed to update";
-  } finally {
-    saving.value = false;
-  }
-}
 </script>
 
 <template>
@@ -61,32 +41,32 @@ async function updateRoles() {
     <div v-if="loading">Loading user...</div>
     <div v-else-if="error" class="text-red-600">{{ error }}</div>
     <div v-else>
+      <p class="mb-2"><strong>Name:</strong> {{ user.name }}</p>
       <p class="mb-2"><strong>Email:</strong> {{ user.email }}</p>
+      <p class="mb-2">
+        <strong>Role:</strong> {{ user.role?.name || "No role assigned" }}
+      </p>
+      <p class="mb-2">
+        <strong>Role Description:</strong>
+        {{ user.role?.description || "No description" }}
+      </p>
 
       <div class="mb-4">
-        <label class="block mb-1 font-medium">Roles:</label>
-        <label class="inline-flex items-center mr-4">
-          <input type="checkbox" value="user" v-model="roles" class="mr-1" />
-          User
-        </label>
-        <label class="inline-flex items-center">
-          <input type="checkbox" value="manager" v-model="roles" class="mr-1" />
-          Manager
-        </label>
+        <label class="block mb-1 font-medium">Permissions:</label>
+        <div v-if="user.role?.permissionKeys?.length" class="space-y-1">
+          <span
+            v-for="permission in user.role.permissionKeys"
+            :key="permission"
+            class="inline-block px-2 py-1 mr-2 mb-2 text-xs bg-blue-100 text-blue-800 rounded"
+          >
+            {{ permission }}
+          </span>
+        </div>
+        <p v-else class="text-gray-500 text-sm">No permissions assigned</p>
       </div>
 
-      <button
-        @click="updateRoles"
-        :disabled="saving"
-        class="px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700 disabled:opacity-50"
-      >
-        <span v-if="!saving">Save</span>
-        <span v-else>Saving…</span>
-      </button>
-
-      <p v-if="success" class="mt-3 text-green-600">
-        User updated successfully.
-      </p>
+      <!-- Note: Role management is now handled through the role object structure -->
+      <!-- This functionality may need to be updated based on your backend API -->
     </div>
   </div>
 </template>

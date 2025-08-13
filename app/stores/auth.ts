@@ -1,17 +1,27 @@
-import { defineStore } from 'pinia';
+import { defineStore } from "pinia";
 
-export const useAuthStore = defineStore('auth', {
+export const useAuthStore = defineStore("auth", {
   state: () => ({
     token: null as string | null,
-    user: null as null | { id: string; email: string; roles: string[] }
+    user: null as null | {
+      _id: string;
+      name: string;
+      email: string;
+      role: {
+        _id: string;
+        name: string;
+        description: string;
+        permissionKeys: string[];
+      };
+    },
   }),
   getters: {
-    isManager: (s) => s.user?.roles?.includes('manager') ?? false,
-    isAuthenticated: (s) => !!s.token
+    isManager: (s) => s.user?.role?.name?.toLowerCase() === "manager" ?? false,
+    isAuthenticated: (s) => !!s.token,
   },
   actions: {
     loadFromStorage() {
-      const raw = localStorage.getItem('auth');
+      const raw = localStorage.getItem("auth");
       if (raw) {
         const parsed = JSON.parse(raw);
         this.token = parsed.token;
@@ -19,12 +29,15 @@ export const useAuthStore = defineStore('auth', {
       }
     },
     persist() {
-      localStorage.setItem('auth', JSON.stringify({ token: this.token, user: this.user }));
+      localStorage.setItem(
+        "auth",
+        JSON.stringify({ token: this.token, user: this.user })
+      );
     },
     logout() {
       this.token = null;
       this.user = null;
-      localStorage.removeItem('auth');
-    }
-  }
+      localStorage.removeItem("auth");
+    },
+  },
 });
