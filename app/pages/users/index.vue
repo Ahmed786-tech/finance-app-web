@@ -12,7 +12,8 @@ const error = ref("");
 
 onMounted(async () => {
   try {
-    users.value = await $fetcher("/users");
+    const response = await $fetcher("/users");
+    users.value = response.data;
   } catch (err: any) {
     error.value = err?.data?.message || "Failed to load users";
   } finally {
@@ -180,12 +181,12 @@ onMounted(async () => {
                                   v-if="user.role"
                                   :class="[
                                     'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
-                                    user.role.name.toLowerCase() === 'manager'
+                                    user.role.toLowerCase() === 'manager'
                                       ? 'bg-blue-100 text-blue-800'
                                       : 'bg-gray-100 text-gray-800',
                                   ]"
                                 >
-                                  {{ user.role.name }}
+                                  {{ user.role }}
                                 </span>
                               </div>
                             </div>

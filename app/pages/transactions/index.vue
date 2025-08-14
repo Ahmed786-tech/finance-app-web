@@ -14,6 +14,8 @@ const { $fetcher } = useApi();
 const items = ref<any[]>([]);
 const loading = ref(true);
 const error = ref<string | null>(null);
+const showDeleteConfirm = ref(false);
+const transactionToDelete = ref<string | null>(null);
 
 onMounted(async () => {
   await fetchTransactions();
@@ -24,7 +26,7 @@ async function fetchTransactions() {
   error.value = null;
   try {
     const res = (await $fetcher("/transactions")) as any[];
-    items.value = res;
+    items.value = res.data;
   } catch (err: any) {
     error.value = err?.data?.message || "Failed to load transactions.";
   } finally {
@@ -48,14 +50,24 @@ function amountClass(tx: any) {
 }
 
 async function deleteTransaction(id: string) {
-  if (confirm("Are you sure you want to delete this transaction?")) {
-    try {
-      await $fetcher(`/transactions/${id}`, { method: "DELETE" });
-      items.value = items.value.filter((tx) => tx._id !== id);
-    } catch (err: any) {
-      error.value = err?.data?.message || "Failed to delete transaction.";
-    }
+  try {
+    await $fetcher(`/transactions/${id}`, { method: "DELETE" });
+    items.value = items.value.filter((tx) => tx._id !== id);
+    showDeleteConfirm.value = false;
+    transactionToDelete.value = null;
+  } catch (err: any) {
+    error.value = err?.data?.message || "Failed to delete transaction.";
   }
+}
+
+function confirmDelete(id: string) {
+  transactionToDelete.value = id;
+  showDeleteConfirm.value = true;
+}
+
+function cancelDelete() {
+  showDeleteConfirm.value = false;
+  transactionToDelete.value = null;
 }
 </script>
 
@@ -257,7 +269,7 @@ async function deleteTransaction(id: string) {
               :key="tx._id"
               class="hover:bg-gray-50 transition-colors"
             >
-              <NuxtLink :to="`/transactions/${tx._id}`" class="block">
+              <div class="block">
                 <div class="px-4 py-4 sm:px-6">
                   <div class="flex items-center justify-between">
                     <div class="flex-1 min-w-0">
@@ -328,7 +340,7 @@ async function deleteTransaction(id: string) {
                         Edit
                       </NuxtLink>
                       <button
-                        @click.stop="deleteTransaction(tx._id)"
+                        @click.stop="confirmDelete(tx._id)"
                         class="text-red-600 hover:text-red-900 text-sm font-medium"
                       >
                         Delete
@@ -336,11 +348,39 @@ async function deleteTransaction(id: string) {
                     </div>
                   </div>
                 </div>
-              </NuxtLink>
+              </div>
             </li>
           </ul>
         </div>
       </div>
     </main>
+
+    <!-- Delete Confirmation Dialog -->
+    <div
+      v-if="showDeleteConfirm"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+    >
+      <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+        <h3 class="text-lg font-semibold mb-4">Confirm Delete</h3>
+        <p class="text-gray-600 mb-6">
+          Are you sure you want to delete this transaction? This action cannot
+          be undone.
+        </p>
+        <div class="flex gap-3 justify-end">
+          <button
+            @click="cancelDelete"
+            class="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50"
+          >
+            Cancel
+          </button>
+          <button
+            @click="deleteTransaction(transactionToDelete!)"
+            class="px-4 py-2 text-white bg-red-500 rounded hover:bg-red-600"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>

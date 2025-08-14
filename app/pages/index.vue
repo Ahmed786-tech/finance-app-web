@@ -9,7 +9,9 @@ definePageMeta({
 const auth = useAuthStore();
 
 function logout() {
+  const { token } = useApi();
   auth.logout();
+  token.value = null;
   navigateTo("/login");
 }
 </script>

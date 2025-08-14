@@ -1,22 +1,23 @@
 <script setup lang="ts">
-definePageMeta({ middleware: ["auth", "manager"] });
-const { $fetcher } = useApi();
-const users = ref<any[]>([]);
+// definePageMeta({ middleware: ["auth", "manager"] });
+// const { $fetcher } = useApi();
+// const users = ref<any[]>([]);
 
-async function load() {
-  users.value = await $fetcher("/users");
-}
-onMounted(load);
+// async function load() {
+//   const response = await $fetcher("/users");
+//   users.value = response.data.users;
+// }
+// onMounted(load);
 
-async function toggleManager(u: any) {
-  const roles = u.roles.includes("manager") ? ["user"] : ["manager"];
-  await $fetcher(`/users/${u._id}`, { method: "PATCH", body: { roles } });
-  await load();
-}
+// async function toggleManager(u: any) {
+//   const roles = u.roles.includes("manager") ? ["user"] : ["manager"];
+//   await $fetcher(`/users/${u._id}`, { method: "PATCH", body: { roles } });
+//   await load();
+// }
 </script>
 
 <template>
-  <div class="p-6">
+  <!-- <div class="p-6">
     <h1 class="text-2xl font-semibold mb-4">Users</h1>
     <div class="border rounded divide-y">
       <div v-for="u in users" :key="u._id" class="p-3 flex justify-between">
@@ -29,5 +30,5 @@ async function toggleManager(u: any) {
         </button>
       </div>
     </div>
-  </div>
+  </div> -->
 </template>

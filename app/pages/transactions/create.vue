@@ -23,8 +23,9 @@ const isSubmitting = ref(false);
 
 onMounted(async () => {
   try {
-    users.value = await $fetcher("/users");
-    // Auto-select the logged-in user as sender
+    const res = await $fetcher("/users");
+    users.value = res.data;
+
     if (user?._id) {
       sender.value = user._id;
     }
@@ -173,9 +174,10 @@ async function submit() {
                     class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     required
                   >
-                    <option value="">Select Receiver</option>
+                    <option v-if="!users.length" value="">No Users</option>
+                    <option v-else value="">Select Receiver</option>
                     <option
-                      v-for="u in users.filter((u) => u._id !== user?.id)"
+                      v-for="u in users.filter((u) => u._id !== user?._id)"
                       :key="u._id"
                       :value="u._id"
                     >

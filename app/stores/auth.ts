@@ -16,28 +16,33 @@ export const useAuthStore = defineStore("auth", {
     },
   }),
   getters: {
-    isManager: (s) => s.user?.role?.name?.toLowerCase() === "manager" ?? false,
+    isManager: (s) => {
+      if (!s.user?.role?.name) return false;
+      return s.user.role.name.toLowerCase() === "manager";
+    },
     isAuthenticated: (s) => !!s.token,
   },
   actions: {
     loadFromStorage() {
-      const raw = localStorage.getItem("auth");
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        this.token = parsed.token;
-        this.user = parsed.user;
+      if (process.client) {
+        const raw = localStorage.getItem("auth");
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          this.user = parsed.user;
+        }
       }
     },
     persist() {
-      localStorage.setItem(
-        "auth",
-        JSON.stringify({ token: this.token, user: this.user })
-      );
+      if (process.client) {
+        localStorage.setItem("auth", JSON.stringify({ user: this.user }));
+      }
     },
     logout() {
       this.token = null;
       this.user = null;
-      localStorage.removeItem("auth");
+      if (process.client) {
+        localStorage.removeItem("auth");
+      }
     },
   },
 });
