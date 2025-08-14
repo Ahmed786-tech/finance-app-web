@@ -10,7 +10,8 @@ export default defineNuxtConfig({
   nitro: {
     devProxy: {
       "/api/v1": {
-        target: "https://finance-app-api-two.vercel.app/api/v1",
+        target:
+          "https://finance-app-r0gywnp13-ahmed-hanifs-projects.vercel.app/api/v1",
         changeOrigin: true,
         prependPath: true,
       },
