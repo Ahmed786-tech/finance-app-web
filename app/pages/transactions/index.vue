@@ -9,7 +9,7 @@ definePageMeta({
 });
 
 const auth = useAuthStore();
-const { $fetcher } = useApi();
+const { $api } = useApi();
 
 const items = ref<any[]>([]);
 const loading = ref(true);
@@ -25,7 +25,7 @@ async function fetchTransactions() {
   loading.value = true;
   error.value = null;
   try {
-    const res = (await $fetcher("/transactions")) as any[];
+    const res = (await $api("/transactions")) as any[];
     items.value = res.data;
   } catch (err: any) {
     error.value = err?.data?.message || "Failed to load transactions.";
@@ -51,7 +51,7 @@ function amountClass(tx: any) {
 
 async function deleteTransaction(id: string) {
   try {
-    await $fetcher(`/transactions/${id}`, { method: "DELETE" });
+    await $api(`/transactions/${id}`, { method: "DELETE" });
     items.value = items.value.filter((tx) => tx._id !== id);
     showDeleteConfirm.value = false;
     transactionToDelete.value = null;

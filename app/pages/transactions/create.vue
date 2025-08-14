@@ -9,7 +9,7 @@ definePageMeta({
   middleware: ["auth", "manager"],
 });
 
-const { $fetcher } = useApi();
+const { $api } = useApi();
 const { user } = useAuthStore();
 const { success, error: showError } = useNotifications();
 
@@ -23,7 +23,7 @@ const isSubmitting = ref(false);
 
 onMounted(async () => {
   try {
-    const res = await $fetcher("/users");
+    const res = await $api("/users");
     users.value = res.data;
 
     if (user?._id) {
@@ -56,7 +56,7 @@ async function submit() {
   }
 
   try {
-    await $fetcher("/transactions", {
+    await $api("/transactions", {
       method: "POST",
       body: {
         sender: sender.value,

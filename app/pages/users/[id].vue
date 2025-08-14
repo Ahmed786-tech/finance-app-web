@@ -10,7 +10,7 @@ definePageMeta({
 });
 
 const route = useRoute();
-const { $fetcher } = useApi();
+const { $api } = useApi();
 const { user: currentUser } = useAuthStore();
 
 const user = ref<any>(null);
@@ -19,7 +19,7 @@ const error = ref("");
 
 onMounted(async () => {
   try {
-    const res = await $fetcher(`/users/${route.params.id}`);
+    const res = await $api(`/users/${route.params.id}`);
     user.value = res.data;
   } catch (err: any) {
     error.value = err?.data?.message || "Failed to load user";

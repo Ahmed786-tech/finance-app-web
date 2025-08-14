@@ -5,14 +5,14 @@ definePageMeta({
   middleware: ["auth", "manager"],
 });
 
-const { $fetcher } = useApi();
+const { $api } = useApi();
 const users = ref<any[]>([]);
 const loading = ref(true);
 const error = ref("");
 
 onMounted(async () => {
   try {
-    const response = await $fetcher("/users");
+    const response = await $api("/users");
     users.value = response.data;
   } catch (err: any) {
     error.value = err?.data?.message || "Failed to load users";

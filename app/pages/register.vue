@@ -4,13 +4,17 @@ import { useAuthStore } from "../stores/auth";
 import { useApi } from "../composables/useApi";
 import { navigateTo } from "#app";
 
+definePageMeta({
+  middleware: "guest",
+});
+
 const email = ref("");
 const name = ref("");
 const password = ref("");
 const errorMsg = ref<string | null>(null);
 const isSubmitting = ref(false);
 const auth = useAuthStore();
-const { $fetcher, token } = useApi();
+const { $api, token } = useApi();
 
 async function submit() {
   errorMsg.value = null;
@@ -25,7 +29,7 @@ async function submit() {
 
   isSubmitting.value = true;
   try {
-    const res = (await $fetcher("/auth/register", {
+    const res = (await $api("/auth/register", {
       method: "POST",
       body: { name: name.value, email: email.value, password: password.value },
     })) as any;

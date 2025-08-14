@@ -7,7 +7,7 @@ export function useApi() {
     maxAge: 60 * 60 * 24 * 7, // 7 days
   });
 
-  const $fetcher = $fetch.create({
+  const $api = $fetch.create({
     baseURL: config.public.apiBase,
     onRequest({ options }) {
       if (token.value && process.client) {
@@ -19,5 +19,5 @@ export function useApi() {
     },
   });
 
-  return { $fetcher, token };
+  return { $api, token };
 }

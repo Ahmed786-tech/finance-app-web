@@ -10,7 +10,7 @@ definePageMeta({
 
 const route = useRoute();
 const router = useRouter();
-const { $fetcher } = useApi();
+const { $api } = useApi();
 const { success, error: showError } = useNotifications();
 
 const transactionEdit = ref<any>(null);
@@ -24,11 +24,9 @@ onMounted(async () => {
   try {
     loading.value = true;
 
-    // Load transaction data
-    const transactionRes = await $fetcher(`/transactions/${route.params.id}`);
+    const transactionRes = await $api(`/transactions/${route.params.id}`);
 
-    // Load users data
-    const usersRes = await $fetcher("/users");
+    const usersRes = await $api("/users");
 
     users.value = usersRes.data;
 
@@ -81,7 +79,7 @@ async function save() {
       return;
     }
 
-    await $fetcher(`/transactions/${route.params.id}`, {
+    await $api(`/transactions/${route.params.id}`, {
       method: "PUT",
       body: {
         sender: transactionEdit.value.sender,
