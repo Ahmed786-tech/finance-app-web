@@ -53,12 +53,12 @@ async function submit() {
 
 <template>
   <div
-    class="flex items-center justify-center min-h-screen px-4 bg-gradient-to-br from-blue-50 to-indigo-100"
+    class="flex items-center justify-center min-h-screen px-4 bg-gradient-to-br from-green-50 to-emerald-100"
   >
     <div class="w-full max-w-md">
       <div class="text-center mb-8">
         <div
-          class="inline-flex items-center justify-center w-16 h-16 mb-4 bg-blue-600 rounded-full"
+          class="inline-flex items-center justify-center w-16 h-16 mb-4 bg-green-600 rounded-full"
         >
           <User class="w-8 h-8 text-white" />
         </div>
@@ -93,7 +93,7 @@ async function submit() {
               type="email"
               placeholder="Enter your email"
               autocomplete="email"
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
               required
             />
           </div>
@@ -110,7 +110,7 @@ async function submit() {
               type="password"
               placeholder="Enter your password"
               autocomplete="current-password"
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
               required
             />
           </div>
@@ -119,7 +119,7 @@ async function submit() {
         <button
           :disabled="isSubmitting"
           type="submit"
-          class="w-full py-3 px-4 font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+          class="w-full py-3 px-4 font-semibold text-white bg-green-600 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
         >
           <span v-if="!isSubmitting" class="flex items-center justify-center">
             <LogIn class="w-5 h-5 mr-2" />
@@ -136,7 +136,7 @@ async function submit() {
             Don't have an account?
             <NuxtLink
               to="/register"
-              class="font-medium text-blue-600 hover:text-blue-500 transition-colors"
+              class="font-medium text-green-600 hover:text-green-500 transition-colors"
               >Create one now</NuxtLink
             >
           </p>
