@@ -1,5 +1,16 @@
 <script setup lang="ts">
 import { useApi } from "../../composables/useApi";
+import { ref, onMounted } from "vue";
+import {
+  User,
+  Loader2,
+  XCircle,
+  ChevronRight,
+  Users,
+  UserPlus,
+  UserCircle,
+  FileWarning,
+} from "lucide-vue-next";
 
 definePageMeta({
   middleware: ["auth", "manager"],
@@ -33,19 +44,7 @@ onMounted(async () => {
               to="/"
               class="flex items-center text-gray-600 hover:text-gray-900"
             >
-              <svg
-                class="w-5 h-5 mr-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M15 19l-7-7 7-7"
-                ></path>
-              </svg>
+              <ChevronRight class="w-5 h-5 mr-2 rotate-180" />
               Back to Dashboard
             </NuxtLink>
           </div>
@@ -67,26 +66,7 @@ onMounted(async () => {
         <!-- Loading State -->
         <div v-if="loading" class="flex items-center justify-center py-12">
           <div class="flex items-center">
-            <svg
-              class="animate-spin -ml-1 mr-3 h-8 w-8 text-blue-600"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="4"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
+            <Loader2 class="animate-spin -ml-1 mr-3 h-8 w-8 text-blue-600" />
             <span class="text-lg text-gray-600">Loading users...</span>
           </div>
         </div>
@@ -97,17 +77,7 @@ onMounted(async () => {
           class="bg-red-50 border border-red-200 rounded-lg p-6"
         >
           <div class="flex">
-            <svg
-              class="w-6 h-6 text-red-400 mr-3"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                clip-rule="evenodd"
-              ></path>
-            </svg>
+            <XCircle class="w-6 h-6 text-red-400 mr-3" />
             <div>
               <h3 class="text-lg font-medium text-red-800">
                 Error loading users
@@ -119,19 +89,7 @@ onMounted(async () => {
 
         <!-- Empty State -->
         <div v-else-if="users.length === 0" class="text-center py-12">
-          <svg
-            class="mx-auto h-12 w-12 text-gray-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"
-            ></path>
-          </svg>
+          <FileWarning class="mx-auto h-12 w-12 text-gray-400" />
           <h3 class="mt-4 text-lg font-medium text-gray-900">No users found</h3>
           <p class="mt-2 text-gray-500">
             There are no users in the system yet.
@@ -156,19 +114,7 @@ onMounted(async () => {
                             <div
                               class="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center"
                             >
-                              <svg
-                                class="w-6 h-6 text-gray-600"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  stroke-width="2"
-                                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                                ></path>
-                              </svg>
+                              <User class="w-6 h-6 text-gray-600" />
                             </div>
                           </div>
                           <div class="ml-4">
@@ -196,19 +142,7 @@ onMounted(async () => {
                     </div>
 
                     <div class="ml-4 flex items-center">
-                      <svg
-                        class="w-5 h-5 text-gray-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M9 5l7 7-7 7"
-                        ></path>
-                      </svg>
+                      <ChevronRight class="w-5 h-5 text-gray-400" />
                     </div>
                   </div>
                 </div>

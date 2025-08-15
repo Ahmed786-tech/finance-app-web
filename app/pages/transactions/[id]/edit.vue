@@ -3,6 +3,7 @@ import { useRoute, useRouter } from "vue-router";
 import { onMounted, ref } from "vue";
 import { useApi } from "~/composables/useApi";
 import { useNotifications } from "~/composables/useNotifications";
+import { ArrowLeft, Loader2, XCircle } from "lucide-vue-next";
 
 definePageMeta({
   middleware: ["auth", "manager"],
@@ -24,8 +25,10 @@ onMounted(async () => {
   try {
     loading.value = true;
 
+    // Load transaction data
     const transactionRes = await $api(`/transactions/${route.params.id}`);
 
+    // Load users data
     const usersRes = await $api("/users");
 
     users.value = usersRes.data;
@@ -115,19 +118,7 @@ async function save() {
               to="/transactions"
               class="flex items-center text-gray-600 hover:text-gray-900"
             >
-              <svg
-                class="w-5 h-5 mr-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M15 19l-7-7 7-7"
-                ></path>
-              </svg>
+              <ArrowLeft class="w-5 h-5 mr-2" />
               Back to Transactions
             </NuxtLink>
           </div>
@@ -149,26 +140,7 @@ async function save() {
         <!-- Loading State -->
         <div v-if="loading" class="flex items-center justify-center py-12">
           <div class="flex items-center">
-            <svg
-              class="animate-spin -ml-1 mr-3 h-8 w-8 text-blue-600"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="4"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
+            <Loader2 class="animate-spin -ml-1 mr-3 h-8 w-8 text-blue-600" />
             <span class="text-lg text-gray-600">Loading transaction...</span>
           </div>
         </div>
@@ -179,17 +151,7 @@ async function save() {
           class="bg-red-50 border border-red-200 rounded-lg p-6"
         >
           <div class="flex">
-            <svg
-              class="w-6 h-6 text-red-400 mr-3"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                clip-rule="evenodd"
-              ></path>
-            </svg>
+            <XCircle class="w-6 h-6 text-red-400 mr-3" />
             <div>
               <h3 class="text-lg font-medium text-red-800">
                 Error loading transaction
@@ -207,17 +169,7 @@ async function save() {
               class="mb-6 p-4 text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg"
             >
               <div class="flex">
-                <svg
-                  class="w-5 h-5 text-red-400 mr-2"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                    clip-rule="evenodd"
-                  ></path>
-                </svg>
+                <XCircle class="w-5 h-5 text-red-400 mr-2" />
                 {{ error }}
               </div>
             </div>
@@ -350,27 +302,10 @@ async function save() {
                   :disabled="saving"
                   class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <svg
+                  <Loader2
                     v-if="saving"
                     class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      class="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      stroke-width="4"
-                    ></circle>
-                    <path
-                      class="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
+                  />
                   {{ saving ? "Saving..." : "Save Changes" }}
                 </button>
               </div>

@@ -3,6 +3,7 @@ import { ref } from "vue";
 import { useAuthStore } from "../stores/auth";
 import { useApi } from "../composables/useApi";
 import { navigateTo } from "#app";
+import { UserPlus, XCircle, Plus, Loader2 } from "lucide-vue-next";
 
 definePageMeta({
   middleware: "guest",
@@ -59,19 +60,7 @@ async function submit() {
         <div
           class="inline-flex items-center justify-center w-16 h-16 mb-4 bg-green-600 rounded-full"
         >
-          <svg
-            class="w-8 h-8 text-white"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
-            ></path>
-          </svg>
+          <UserPlus class="w-8 h-8 text-white" />
         </div>
         <h1 class="text-3xl font-bold text-gray-900">Create Account</h1>
         <p class="mt-2 text-gray-600">Join our money management platform</p>
@@ -86,17 +75,7 @@ async function submit() {
           class="p-4 text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg"
         >
           <div class="flex">
-            <svg
-              class="w-5 h-5 text-red-400 mr-2"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-                clip-rule="evenodd"
-              ></path>
-            </svg>
+            <XCircle class="w-5 h-5 text-red-400 mr-2" />
             {{ errorMsg }}
           </div>
         </div>
@@ -158,42 +137,11 @@ async function submit() {
           class="w-full py-3 px-4 font-semibold text-white bg-green-600 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
         >
           <span v-if="!isSubmitting" class="flex items-center justify-center">
-            <svg
-              class="w-5 h-5 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
-              ></path>
-            </svg>
+            <Plus class="w-5 h-5 mr-2" />
             Create Account
           </span>
           <span v-else class="flex items-center justify-center">
-            <svg
-              class="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="4"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
+            <Loader2 class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" />
             Creating account...
           </span>
         </button>

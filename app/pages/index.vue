@@ -1,6 +1,16 @@
 <script setup lang="ts">
 import { useAuthStore } from "~/stores/auth";
 import { navigateTo } from "#app";
+import {
+  User,
+  Users,
+  Plus,
+  ChevronRight,
+  Loader2,
+  LogOut,
+  FileText,
+  UserPlus,
+} from "lucide-vue-next";
 
 definePageMeta({
   middleware: "auth",
@@ -27,19 +37,7 @@ function logout() {
                 <div
                   class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center"
                 >
-                  <svg
-                    class="w-5 h-5 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
-                    ></path>
-                  </svg>
+                  <User class="w-5 h-5 text-white" />
                 </div>
                 <h1 class="ml-3 text-xl font-semibold text-gray-900">
                   Finance App
@@ -61,19 +59,7 @@ function logout() {
               @click="logout"
               class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
-              <svg
-                class="w-4 h-4 mr-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                ></path>
-              </svg>
+              <LogOut class="w-4 h-4 mr-2" />
               Logout
             </button>
           </div>
@@ -90,19 +76,7 @@ function logout() {
                 <div
                   class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center"
                 >
-                  <svg
-                    class="w-6 h-6 text-blue-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                    ></path>
-                  </svg>
+                  <User class="w-6 h-6 text-blue-600" />
                 </div>
               </div>
               <div class="ml-4">
@@ -128,19 +102,7 @@ function logout() {
                   <div
                     class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center"
                   >
-                    <svg
-                      class="w-5 h-5 text-blue-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                      ></path>
-                    </svg>
+                    <FileText class="w-5 h-5 text-blue-600" />
                   </div>
                 </div>
                 <div class="ml-4">
@@ -173,19 +135,7 @@ function logout() {
                   <div
                     class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center"
                   >
-                    <svg
-                      class="w-5 h-5 text-green-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                      ></path>
-                    </svg>
+                    <Plus class="w-5 h-5 text-green-600" />
                   </div>
                 </div>
                 <div class="ml-4">
@@ -216,19 +166,7 @@ function logout() {
                   <div
                     class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center"
                   >
-                    <svg
-                      class="w-5 h-5 text-purple-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"
-                      ></path>
-                    </svg>
+                    <Users class="w-5 h-5 text-purple-600" />
                   </div>
                 </div>
                 <div class="ml-4">
