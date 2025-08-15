@@ -1,5 +1,4 @@
 export default defineNuxtPlugin(() => {
-  // Only run on client side
   if (process.client) {
     const auth = useAuthStore();
     const { token } = useApi();
@@ -10,7 +9,7 @@ export default defineNuxtPlugin(() => {
     // Set token from cookie to auth store
     auth.token = token.value;
 
-    // Watch for token changes and sync
+    // Watch for token changes
     watch(
       () => token.value,
       (newToken) => {

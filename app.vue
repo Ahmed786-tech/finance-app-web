@@ -8,9 +8,7 @@
 <script setup lang="ts">
 useHead({
   title: "Money App",
-  meta: [
-    { name: "description", content: "A modern money management application" },
-  ],
+  meta: [{ name: "description", content: "A finance management application" }],
 });
 </script>
 
