@@ -3,7 +3,7 @@ import { ref } from "vue";
 import { useAuthStore } from "../stores/auth";
 import { useApi } from "../composables/useApi";
 import { navigateTo } from "#app";
-import { User, XCircle, LogIn, Loader2 } from "lucide-vue-next";
+import { User, XCircle, LogIn, Loader2, Eye, EyeOff } from "lucide-vue-next";
 
 definePageMeta({
   middleware: "guest",
@@ -11,6 +11,7 @@ definePageMeta({
 
 const email = ref("");
 const password = ref("");
+const showPassword = ref(false);
 const errorMsg = ref<string | null>(null);
 const isSubmitting = ref(false);
 
@@ -104,15 +105,26 @@ async function submit() {
               class="block text-sm font-medium text-gray-700 mb-2"
               >Password</label
             >
-            <input
-              id="password"
-              v-model="password"
-              type="password"
-              placeholder="Enter your password"
-              autocomplete="current-password"
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
-              required
-            />
+            <div class="relative">
+              <input
+                id="password"
+                v-model="password"
+                :type="showPassword ? 'text' : 'password'"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors pr-10"
+                required
+              />
+              <button
+                type="button"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                @click="showPassword = !showPassword"
+                tabindex="-1"
+              >
+                <Eye v-if="!showPassword" class="w-5 h-5" />
+                <EyeOff v-else class="w-5 h-5" />
+              </button>
+            </div>
           </div>
         </div>
 

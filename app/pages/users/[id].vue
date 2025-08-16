@@ -3,7 +3,15 @@ import { useRoute } from "vue-router";
 import { ref, onMounted } from "vue";
 import { useAuthStore } from "../../stores/auth";
 import { navigateTo } from "#app";
-import { ArrowLeft, Check, Info, XCircle, Loader2 } from "lucide-vue-next";
+import {
+  ArrowLeft,
+  Check,
+  Info,
+  XCircle,
+  Loader2,
+  Eye,
+  EyeOff,
+} from "lucide-vue-next";
 import { useApi } from "../../composables/useApi";
 
 definePageMeta({
@@ -26,6 +34,7 @@ const editLoading = ref(false);
 const showDeleteConfirm = ref(false);
 const deleteLoading = ref(false);
 const deleteError = ref("");
+const showEditPassword = ref(false);
 
 onMounted(async () => {
   try {
@@ -176,12 +185,23 @@ async function deleteUser() {
                 <label class="block text-sm font-medium text-gray-500 mb-1"
                   >Password</label
                 >
-                <input
-                  v-model="editPassword"
-                  type="password"
-                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Leave blank to keep unchanged"
-                />
+                <div class="relative">
+                  <input
+                    v-model="editPassword"
+                    :type="showEditPassword ? 'text' : 'password'"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10"
+                    placeholder="Leave blank to keep unchanged"
+                  />
+                  <button
+                    type="button"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    @click="showEditPassword = !showEditPassword"
+                    tabindex="-1"
+                  >
+                    <Eye v-if="!showEditPassword" class="w-5 h-5" />
+                    <EyeOff v-else class="w-5 h-5" />
+                  </button>
+                </div>
               </div>
               <div v-if="editError" class="text-red-600 text-sm">
                 {{ editError }}
