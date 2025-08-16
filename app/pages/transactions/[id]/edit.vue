@@ -184,18 +184,17 @@ async function save() {
                   >
                     Sender
                   </label>
-
                   <select
                     id="sender"
                     v-model="transactionEdit.sender"
                     class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     required
-                    disabled
                   >
-                    <option v-if="senderUser" :value="senderUser._id">
-                      {{ senderUser.email }}
+                    <option v-if="!users.length" value="">No Users</option>
+                    <option v-else value="">Select Sender</option>
+                    <option v-for="u in users" :key="u._id" :value="u._id">
+                      {{ u.email }}
                     </option>
-                    <option v-else value="">Loading sender...</option>
                   </select>
                 </div>
 
@@ -215,7 +214,9 @@ async function save() {
                   >
                     <option value="">Select Receiver</option>
                     <option
-                      v-for="user in users"
+                      v-for="user in users.filter(
+                        (u) => u._id !== transactionEdit.sender
+                      )"
                       :key="user._id"
                       :value="user._id"
                     >

@@ -52,10 +52,10 @@ onMounted(async () => {
       </div>
     </header>
 
-    <!-- Main Content -->
+    <!-- Main  -->
     <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
       <div class="px-4 py-6 sm:px-0">
-        <!-- Page Header -->
+        <!--  Header -->
         <div class="mb-8">
           <h1 class="text-3xl font-bold text-gray-900">User Management</h1>
           <p class="mt-2 text-sm text-gray-600">
@@ -63,7 +63,7 @@ onMounted(async () => {
           </p>
         </div>
 
-        <!-- Loading State -->
+        <!-- Loading  -->
         <div v-if="loading" class="flex items-center justify-center py-12">
           <div class="flex items-center">
             <Loader2 class="animate-spin -ml-1 mr-3 h-8 w-8 text-blue-600" />
@@ -71,7 +71,7 @@ onMounted(async () => {
           </div>
         </div>
 
-        <!-- Error State -->
+        <!-- Error  -->
         <div
           v-else-if="error"
           class="bg-red-50 border border-red-200 rounded-lg p-6"
@@ -87,7 +87,7 @@ onMounted(async () => {
           </div>
         </div>
 
-        <!-- Empty State -->
+        <!-- Empty  -->
         <div v-else-if="users.length === 0" class="text-center py-12">
           <FileWarning class="mx-auto h-12 w-12 text-gray-400" />
           <h3 class="mt-4 text-lg font-medium text-gray-900">No users found</h3>

@@ -133,11 +133,18 @@ async function submit() {
                   >
                     Sender
                   </label>
-                  <div
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-50 text-gray-700"
+                  <select
+                    id="sender"
+                    v-model="sender"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    required
                   >
-                    {{ user?.email || "Loading..." }}
-                  </div>
+                    <option v-if="!users.length" value="">No Users</option>
+                    <option v-else value="">Select Sender</option>
+                    <option v-for="u in users" :key="u._id" :value="u._id">
+                      {{ u.email }}
+                    </option>
+                  </select>
                 </div>
 
                 <div>
@@ -156,7 +163,7 @@ async function submit() {
                     <option v-if="!users.length" value="">No Users</option>
                     <option v-else value="">Select Receiver</option>
                     <option
-                      v-for="u in users.filter((u) => u._id !== user?._id)"
+                      v-for="u in users.filter((u) => u._id !== sender)"
                       :key="u._id"
                       :value="u._id"
                     >
